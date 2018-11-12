@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+    <spinning-logo> <!--custom element -->
+        <img src="sasuke.jpg" />
+    </spinning-logo>
+
+    <script>
+        const template = document.createElement('template')
+        template.innerHTML = '<style>:host{display: inline-block}</style><slot />'
+        class SpinningLogo extends HTMLElement{
+            constructor(){
+                super()
+                // shadow dom attaches a hidden seperate dom to a specified html element
+                this.attachShadow({
+                    // open mode means that we can access the dom from main context js 
+                    // but on closed it means we cannot access shadow dom from outside eg <video> tag
+                    mode: 'open'
+                })
+            }
+            connectedCallback(){
+                this.shadowRoot.appendChild(template.content.cloneNode(true))
+                this.animate([
+                    {transform: 'scale(0) rotate(0deg)'},
+                    {transform: 'scale(1) rotate(1080deg)'},
+                    {transform: 'scale(0) rotate(2160deg)'}
+                ], {
+                    duration: 1000,
+                    easing: 'cubic-bezier(0.88,0.02,0.06,1)',
+                    fill: 'forwards' // to stop the animation on the last frame
+                })
+            }
+        }
+        customElements.define('spinning-logo', SpinningLogo)
+    </script>
+
+</body>
+</html>
